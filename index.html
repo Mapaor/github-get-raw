@@ -34,7 +34,7 @@
             style="width: 70%; height: 20px"
             placeholder="https://github.com/user/repo/tree/main/directory"
         ></textarea>
-        <div id="output-dir-url"></div>
+        <div id="output-dir-url" style="white-space: pre-wrap"></div>
         <script>
           const inputDirUrl = document.getElementById("input-dir-url");
           const outputDirFiles = document.getElementById("output-dir-url");
@@ -48,7 +48,7 @@
               const dirResponse = await fetch(dirApiUrl);
               const dirData = await dirResponse.json();
               const dirFileNames = dirData.map(item => item.name);
-              const dirFileNamesTxt = dirFileNames.join("\n\n\n");
+              const dirFileNamesTxt = dirFileNames.join("\n");
 
               outputDirFiles.textContent = dirFileNamesTxt;
           });
