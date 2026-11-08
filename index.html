@@ -1,28 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Raw URL</title>
-</head>
-<body>
-    <textarea id="input" style="width: 70%; height: 20px;" placeholder="https://github.com/user/repo/blob/main/file.txt"></textarea>
-    <div id="output"></div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GitHub Raw URL</title>
+    </head>
+    <body style="font-family: monospace">
+        <h3>Blob file</h3>
+        <textarea
+            id="input-file-url"
+            style="width: 70%; height: 20px"
+            placeholder="https://github.com/user/repo/blob/main/file.txt"
+        ></textarea>
+        <div id="output-file-url"></div>
+        <script>
+            const inputFileUrl = document.getElementById("input-file-url");
+            const outputFileUrl = document.getElementById("output-file-url");
 
-    <script>
-        const input = document.getElementById("input");
-        const output = document.getElementById("output");
+            inputFileUrl.addEventListener("input", () => {
+                const fileUrl = inputFileUrl.value.trim();
+                const rawFileUrl = fileUrl.replace(
+                    /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/,
+                    "https://raw.githubusercontent.com/$1/$2/$3",
+                );
 
-        input.addEventListener("input", () => {
-            const url = input.value.trim();
-            const rawUrl = url.replace(
-                /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/,
-                "https://raw.githubusercontent.com/$1/$2/$3"
-            );
+                outputFileUrl.textContent = rawFileUrl !== fileUrl ? rawFileUrl : "";
+            });
+        </script>
 
-            output.textContent = rawUrl !== url ? rawUrl : "";
-        });
-    </script>
-</body>
+        <h3>Directory files list</h3>
+        <textarea
+            id="input-dir-url"
+            style="width: 70%; height: 20px"
+            placeholder="https://github.com/user/repo/tree/main/directory"
+        ></textarea>
+        <div id="output-dir-url"></div>
+        <script>
+          const inputDirUrl = document.getElementById("input-dir-url");
+          const outputDirFiles = document.getElementById("output-dir-url");
+
+          inputDirUrl.addEventListener("input", async () => {
+              const dirUrl = inputDirUrl.value.trim();
+              const dirApiUrl = dirUrl.replace(
+                  /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/tree\/([^/]+)\/(.+)$/,
+                  "https://api.github.com/repos/$1/$2/contents/$4",
+              );
+              const dirResponse = await fetch(dirApiUrl);
+              const dirData = await dirResponse.json();
+              const dirFileNames = dirData.map(item => item.name);
+              const dirFileNamesTxt = dirFileNames.join("\n\n\n");
+
+              outputDirFiles.textContent = dirFileNamesTxt;
+          });
+        </script>
+    </body>
 </html>
