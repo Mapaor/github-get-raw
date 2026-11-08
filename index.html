@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -24,7 +24,7 @@
                     "https://raw.githubusercontent.com/$1/$2/$3",
                 );
 
-                outputFileUrl.textContent = rawFileUrl !== fileUrl ? rawFileUrl : "";
+                outputFileUrl.textContent = rawFileUrl;
             });
         </script>
 
@@ -52,6 +52,26 @@
 
               outputDirFiles.textContent = dirFileNamesTxt;
           });
+        </script>
+
+        <h3>Directory download</h3>
+        <textarea
+            id="input-dir-download-url"
+            style="width: 70%; height: 20px"
+            placeholder="https://github.com/user/repo/tree/main/directory"
+        ></textarea>
+        <div id="output-dir-download-url" style="white-space: pre-wrap"></div>
+        <script>
+            const inputDirDownloadUrl = document.getElementById("input-dir-download-url");
+            const outputDownloadUrl = document.getElementById("output-dir-download-url");
+
+            inputDirDownloadUrl.addEventListener("input", () => {
+                const dirDownloadUrl = inputDirDownloadUrl.value.trim();
+                const dirDownloadUrlEncoded = encodeURI(dirDownloadUrl);
+                const downloadDirUrl = "https://download-directory.github.io?url=" + dirDownloadUrlEncoded;
+
+                outputDownloadUrl.textContent = downloadDirUrl;
+            });
         </script>
     </body>
 </html>
